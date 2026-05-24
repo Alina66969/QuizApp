@@ -1,0 +1,75 @@
+body, html {
+
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+
+}
+
+.App {
+
+  background: #fff;
+  padding: 60px 80px;  
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  min-width: 400px;   
+  max-width: 700px;     
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #333;
+
+}
+
+.question-box, .result-box {
+
+  background: #345678;
+  padding: 30px 40px;  
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 25px;
+  min-height: 250px;   
+
+}
+
+.options {
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;  
+  margin-top: 20px;
+
+}
+
+button {
+
+  width: 100%;
+  padding: 15px;
+  font-size: 20px;  
+  border: none;
+  border-radius: 8px;
+  background: #f5a623;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 12px;
+
+}
+
+button:hover {
+
+  background: #d4881f;
+  
+}
+
+button.correct {
+  background-color: #28a745; /* green */
+  color: white;
+}
+
+button.wrong {
+  background-color: #dc3545; /* red */
+  color: white;
+}
