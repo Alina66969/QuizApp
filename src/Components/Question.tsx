@@ -1,10 +1,21 @@
 import { useState } from 'react';
 
-const Question = ({ questionData, onAnswer }) => {
-  const [selected, setSelected] = useState(null);
-  const [locked, setLocked] = useState(false);
+type QuestionData = {
+  question: string;
+  options: string[];
+  answer: string;
+};
 
-  const handleClick = (option) => {
+type Props = {
+  questionData: QuestionData;
+  onAnswer: (selectedOption: string) => void;
+};
+
+const Question = ({ questionData, onAnswer }: Props) => {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [locked, setLocked] = useState<boolean>(false);
+
+  const handleClick = (option: string) => {
     if (locked) return;
     setSelected(option);
     setLocked(true);
@@ -16,11 +27,11 @@ const Question = ({ questionData, onAnswer }) => {
     }, 500);
   };
 
-  const getClass = (option) => {
-    if (!locked) return "";
-    if (option === questionData.answer) return "correct";
-    if (option === selected && option !== questionData.answer) return "wrong";
-    return "";
+  const getClass = (option: string) => {
+    if (!locked) return '';
+    if (option === questionData.answer) return 'correct';
+    if (option === selected && option !== questionData.answer) return 'wrong';
+    return '';
   };
 
   return (

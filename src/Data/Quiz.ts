@@ -1,4 +1,10 @@
-const Quiz = [
+export type QuestionItem = {
+  question: string;
+  options: string[];
+  answer: string;
+};
+
+const Quiz: QuestionItem[] = [
   {
     question: "Which gas do plants produce during photosynthesis?",
     options: ["Oxygen", "Hydrogen", "Nitrogen", "Carbon"],

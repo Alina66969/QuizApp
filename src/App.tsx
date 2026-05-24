@@ -5,12 +5,12 @@ import Quiz from './Data/Quiz';
 import './App.css';
 
 function App() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [wrongCount, setWrongCount] = useState(0);
-  const [finished, setFinished] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [correctCount, setCorrectCount] = useState<number>(0);
+  const [wrongCount, setWrongCount] = useState<number>(0);
+  const [finished, setFinished] = useState<boolean>(false);
 
-  const handleAnswer = (selectedOption) => {
+  const handleAnswer = (selectedOption: string) => {
     const currentQuestion = Quiz[currentIndex];
 
     if (selectedOption === currentQuestion.answer) {
