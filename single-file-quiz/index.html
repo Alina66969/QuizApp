@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz App</title>
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    body {
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .app {
+      background: #fff;
+      padding: 40px 50px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      width: min(700px, 100%);
+      text-align: center;
+    }
+
+    .question-box,
+    .result-box {
+      background: #345678;
+      padding: 30px 35px;
+      border-radius: 12px;
+      color: white;
+      margin-top: 25px;
+      min-height: 260px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background: #f5a623;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background: #d4881f;
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
+
+    button.correct {
+      background-color: #28a745;
+    }
+
+    button.wrong {
+      background-color: #dc3545;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+    }
+
+    .result-list {
+      text-align: left;
+      margin: 20px auto;
+      max-width: 320px;
+      line-height: 1.7;
+    }
+
+    .result-list p {
+      margin: 8px 0;
+      font-size: 1.05rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Quiz App</h1>
+    <div id="quiz-content"></div>
+  </div>
+
+  <script>
+    const quiz = [
+      { question: 'Which gas do plants produce during photosynthesis?', options: ['Oxygen', 'Hydrogen', 'Nitrogen', 'Carbon'], answer: 'Oxygen' },
+      { question: 'What is the Capital of France?', options: ['Madrid', 'Paris', 'England', 'Tokyo'], answer: 'Paris' },
+      { question: 'Which planet is known as the red planet?', options: ['Jupiter', 'Venus', 'Mars', 'Pluto'], answer: 'Mars' },
+      { question: 'Which fruit is yellow when ripe?', options: ['Apple', 'Orange', 'Kiwi', 'Banana'], answer: 'Banana' },
+      { question: 'Which animal is known for its stripes?', options: ['Tiger', 'Lion', 'Monkey', 'Bear'], answer: 'Tiger' },
+      { question: 'What color is the sky on a clear day?', options: ['Red', 'Blue', 'Green', 'Pink'], answer: 'Blue' },
+      { question: 'What is the chemical formula of water?', options: ['NaCl', 'O2', 'H2O', 'NaOH'], answer: 'H2O' },
+      { question: 'What is the freezing point of water?', options: ['0°C', '32°C', '100°C', '50°C'], answer: '0°C' },
+      { question: 'Which is the smallest prime number?', options: ['0', '1', '2', '3'], answer: '2' },
+      { question: 'In which year did World War II end?', options: ['1940', '1945', '1950', '1939'], answer: '1945' }
+    ];
+
+    const quizContent = document.getElementById('quiz-content');
+    let currentIndex = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let isLocked = false;
+
+    function renderQuestion() {
+      const current = quiz[currentIndex];
+      quizContent.innerHTML = '';
+
+      const questionBox = document.createElement('div');
+      questionBox.className = 'question-box';
+
+      const title = document.createElement('h2');
+      title.textContent = current.question;
+      questionBox.appendChild(title);
+
+      const optionsContainer = document.createElement('div');
+      optionsContainer.className = 'options';
+
+      current.options.forEach((optionText, index) => {
+        const button = document.createElement('button');
+        button.textContent = `${index + 1}. ${optionText}`;
+        button.addEventListener('click', () => handleAnswer(optionText, button));
+        optionsContainer.appendChild(button);
+      });
+
+      questionBox.appendChild(optionsContainer);
+      quizContent.appendChild(questionBox);
+    }
+
+    function handleAnswer(selectedOption, button) {
+      if (isLocked) return;
+      isLocked = true;
+
+      const current = quiz[currentIndex];
+      const buttons = Array.from(document.querySelectorAll('.options button'));
+
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent.includes(current.answer)) {
+          btn.classList.add('correct');
+        }
+        if (btn !== button && btn.textContent.includes(selectedOption) && selectedOption !== current.answer) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      if (selectedOption === current.answer) {
+        correctCount += 1;
+      } else {
+        wrongCount += 1;
+      }
+
+      setTimeout(() => {
+        currentIndex += 1;
+        isLocked = false;
+        if (currentIndex < quiz.length) {
+          renderQuestion();
+        } else {
+          renderResult();
+        }
+      }, 500);
+    }
+
+    function renderResult() {
+      quizContent.innerHTML = '';
+
+      const resultBox = document.createElement('div');
+      resultBox.className = 'result-box';
+
+      const title = document.createElement('h1');
+      title.textContent = 'Your Results';
+      resultBox.appendChild(title);
+
+      const resultList = document.createElement('div');
+      resultList.className = 'result-list';
+      resultList.innerHTML = `
+        <p>Questions Asked: ${quiz.length}</p>
+        <p>Correct: ${correctCount}</p>
+        <p>Wrong: ${wrongCount}</p>
+        <p>Remaining: ${quiz.length - (correctCount + wrongCount)}</p>
+      `;
+      resultBox.appendChild(resultList);
+
+      const thankYou = document.createElement('h2');
+      thankYou.textContent = 'THANK YOU';
+      resultBox.appendChild(thankYou);
+
+      const restartButton = document.createElement('button');
+      restartButton.textContent = 'Restart Quiz';
+      restartButton.addEventListener('click', restartQuiz);
+      resultBox.appendChild(restartButton);
+
+      quizContent.appendChild(resultBox);
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      isLocked = false;
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
